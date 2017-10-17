@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Description fields-->
+    <string name="name">Name:</string>
+    <string name="title">Title:</string>
+    <string name="religion">Religion:</string>
+    <string name="race">Race:</string>
+    <string name="gender">Gender:</string>
+    <string name="age">Age:</string>
+    <string name="bday">Birthday:</string>
+    <string name="height">Height:</string>
+    <string name="weight">Weight:</string>
+    <string name="size">Size:</string>
+    <string name="tl">TL:</string>
+    <string name="hair">Hair:</string>
+    <string name="eyes">Eyes:</string>
+    <string name="skin">Skin:</string>
+    <string name="hand">Hand:</string>
+    <!--Attributes fields-->
+    <string name="str">Strength:</string>
+    <string name="dex">Dexterity:</string>
+    <string name="intel">Intelligence:</string>
+    <string name="health">Health:</string>
+    <string name="will">Will:</string>
+    <string name="fright">Fright Check:</string>
+    <string name="speed">Basic Speed:</string>
+    <string name="move">Basic Move:</string>
+    <string name="per">Perception:</string>
+    <string name="vision">Vision:</string>
+    <string name="hearing">Hearing:</string>
+    <string name="taste">Taste &amp; Smell:</string>
+    <string name="touch">Touch:</string>
+    <string name="curr_fp">Current FP:</string>
+    <string name="basic_fp">Basic FP:</string>
+    <string name="tired">Tired:</string>
+    <string name="collapse">Collapse:</string>
+    <string name="unconscious">Unconscious:</string>
+    <string name="curr_hp">Current HP:</string>
+    <string name="basic_hp">Basic HP:</string>
+    <string name="reeling">Reeling:</string>
+    <string name="check1">Check #1:</string>
+    <string name="check2">Check #2:</string>
+    <string name="check3">Check #3:</string>
+    <string name="check4">Check #4:</string>
+    <string name="dead">Dead:</string>
+    <!--Reference Tables-->
+    <string name="load_none">20 lb</string>
+    <string name="load_light">40 lb</string>
+    <string name="load_med">60 lb</string>
+    <string name="load_heavy">120 lb</string>
+    <string name="load_xheavy">200 lb</string>
+    <string name="move_none">5</string>
+    <string name="move_light">4</string>
+    <string name="move_med">3</string>
+    <string name="move_heavy">2</string>
+    <string name="move_xheavy">1</string>
+    <string name="dodge_none">8</string>
+    <string name="dodge_light">7</string>
+    <string name="dodge_med">6</string>
+    <string name="dodge_heavy">5</string>
+    <string name="dodge_xheavy">4</string>
+    <string name="basic_l">20 lb</string>
+    <string name="one_l">40 lb</string>
+    <string name="two_l">160 lb</string>
+    <string name="shove_l">240 lb</string>
+    <string name="run_l">480 lb</string>
+    <string name="carry_l">300 lb</string>
+    <string name="shift_l">1000 lb</string>
+</resources>

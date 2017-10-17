@@ -1,0 +1,103 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:8103203296846832431",
+      "lastPropertyId": "6:2416580521715224187",
+      "name": "GChar",
+      "properties": [
+        {
+          "id": "1:1286926506519336057",
+          "name": "id"
+        },
+        {
+          "id": "2:5654613887062499823",
+          "name": "points"
+        },
+        {
+          "id": "3:418014765173667487",
+          "name": "desc"
+        },
+        {
+          "id": "4:5909623118508067868",
+          "name": "attr"
+        },
+        {
+          "id": "5:8996694717836145820",
+          "name": "name"
+        },
+        {
+          "id": "6:2416580521715224187",
+          "name": "speed"
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:712555514465334755",
+          "name": "skills"
+        }
+      ]
+    },
+    {
+      "id": "2:4022210360378469068",
+      "lastPropertyId": "10:5843328599954429172",
+      "name": "Skill",
+      "properties": [
+        {
+          "id": "1:5132664269140663888",
+          "name": "id"
+        },
+        {
+          "id": "2:8022133940272130716",
+          "name": "name"
+        },
+        {
+          "id": "3:2166133888850342865",
+          "name": "att"
+        },
+        {
+          "id": "4:9071944944967359553",
+          "name": "spec"
+        },
+        {
+          "id": "5:6989552942813392249",
+          "name": "notes"
+        },
+        {
+          "id": "6:4239945408396136909",
+          "name": "diff"
+        },
+        {
+          "id": "7:4351664597585315524",
+          "name": "diff_str"
+        },
+        {
+          "id": "8:7463625974762636959",
+          "name": "level"
+        },
+        {
+          "id": "9:8898126186471122913",
+          "name": "rank"
+        },
+        {
+          "id": "10:5843328599954429172",
+          "name": "cost"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:4022210360378469068",
+  "lastIndexId": "0:0",
+  "lastRelationId": "1:712555514465334755",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
