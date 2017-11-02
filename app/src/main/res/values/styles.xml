@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@android:color/holo_green_dark</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -16,5 +16,10 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="DelStyle" parent="android:Widget.Button">
+        <item name="android:minHeight">2dp</item>
+        <item name="android:minWidth">2dp</item>
+    </style>
 
 </resources>

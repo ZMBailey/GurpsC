@@ -25,7 +25,7 @@ class GChar() {
         this.speed = s
         this.desc = d
         this.attr = a
-        sk.toCollection(this.skills)
+        for(item: Skill in sk) {this.skills.add(item)}
     }
 
     fun getD():List<String>{

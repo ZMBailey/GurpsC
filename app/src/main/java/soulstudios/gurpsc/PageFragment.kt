@@ -1,6 +1,8 @@
 package soulstudios.gurpsc
 
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,26 +14,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.Button
-import android.widget.GridLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import io.objectbox.kotlin.boxFor
 import kotlinx.android.synthetic.main.content_load.*
 import kotlinx.android.synthetic.main.fragment_options.view.*
 import kotlinx.android.synthetic.main.fragment_skills.*
+import kotlinx.android.synthetic.main.fragment_weapons.*
 import soulstudios.gurpsc.App.Companion.boxStore
 import soulstudios.gurpsc.App.Companion.current
 
-/**
- * Created by soulo_000 on 9/28/2017.
+/**PageFragment
+ * Each PageFragment is a page of the character sheet.
+ * Current Pages are:
+ * -Options
+ * -Description
+ * -Attributes
+ * -Reference
+ * -Skills
+ * Planned Pages:
+ * -Weapon_Skills
+ * -Advantages/Disadvantages
  */
 class PageFragment : Fragment() {
 
     private var this_page = 0
     private var rView: View? = null
-    private var isCreated: Boolean = false
-    var charBox = App.boxStore.boxFor(GChar::class.java)
+    private var afterAdd: Boolean = false
+    var skillBox = App.boxStore.boxFor(Skill::class)
+    var meleeBox = App.boxStore.boxFor(Melee::class)
+    var rangedBox = App.boxStore.boxFor(Ranged::class)
+    var charBox = App.boxStore.boxFor(GCharacter::class)
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val rootView = inflater!!.inflate(this_page, container, false)
@@ -57,16 +69,32 @@ class PageFragment : Fragment() {
         Log.w("Run","OnDestroy")
     }
 
-    fun updateView(type: String){
-        Log.w("Updating","View")
-        Log.w("Current attr",App.current.attributes.toString())
-        if(page == R.layout.fragment_skills){
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+    }
+
+    //onResume, if returning from the addskills screen, reload the skills table
+    override fun onResume() {
+        super.onResume()
+        if(afterAdd){
             setSkills()
-        }else {
-            setFragment(type)
+            afterAdd=false
         }
     }
 
+    //when switching to a new page, reload field entries for the
+    //new page
+    fun updateView(type: String){
+        Log.w("Updating","View")
+        Log.w("Current attr",App.current.attributes.toString())
+        when {
+            (page == R.layout.fragment_skills) -> setSkills()
+            (page == R.layout.fragment_weapons) -> setWeapons()
+            else -> setFragment(type)
+        }
+    }
+
+    //initial setup for a page, differs depending on the page
     private fun setup(type: String,rootView: View){
         if(!rViews.values.contains(rootView)) {
             rViews.put(type,rootView)
@@ -80,12 +108,14 @@ class PageFragment : Fragment() {
         }
     }
 
+    //set handlers for the option buttons
     private fun setOptions(){
         rViews["Options"]!!.button_new.setOnClickListener(NewHandler())
         rViews["Options"]!!.button_load.setOnClickListener(LoadHandler())
         rViews["Options"]!!.button_save.setOnClickListener(SaveHandler())
     }
 
+    //handler for the New Character button
     inner class NewHandler: View.OnClickListener{
         override fun onClick(v: View?) {
             App.current = GCharacter()
@@ -96,18 +126,12 @@ class PageFragment : Fragment() {
         }
     }
 
+    //handler for the Save button
     inner class SaveHandler: View.OnClickListener{
         override fun onClick(v: View?) {
-            //var charBox = App.boxStore.boxFor(GChar::class.java)
-            val boxid:Long = App.current.id
-            if(current.id != 0L) {
-                if (charBox.get(current.id) != null) {
-                    charBox.remove(current.id)
-                }
-            }
-            charBox.put(App.current.export())
-            val box:MutableList<GChar> = charBox.all
-            if(boxid == 0L){ App.current.load(box[box.size-1])}
+            App.current.export()
+            charBox.put(App.current)
+            Log.w("new Id",App.current.id.toString())
             val name = current.getDesc("Name")
             val saved = "Character $name has been saved."
             Toast.makeText( this@PageFragment.context, saved,
@@ -115,6 +139,7 @@ class PageFragment : Fragment() {
         }
     }
 
+    //handler for the Load button
     inner class LoadHandler: View.OnClickListener{
         override fun onClick(v: View?) {
             win!!.exitTransition = Explode()
@@ -123,14 +148,37 @@ class PageFragment : Fragment() {
         }
     }
 
-    inner class AddHandler: View.OnClickListener{
+    //handler for the Add Skill button
+    inner class AddSkillHandler: View.OnClickListener{
         override fun onClick(v: View?) {
             win!!.exitTransition = Explode()
+            afterAdd=true
             val select = Intent(this@PageFragment.context,AddSkillActivity::class.java)
             startActivity(select)
         }
     }
 
+    //handler for the Add Melee button
+    inner class AddMllHandler: View.OnClickListener{
+        override fun onClick(v: View?) {
+            win!!.exitTransition = Explode()
+            //afterAdd=true
+            val select = Intent(this@PageFragment.context,AddMeleeActivity::class.java)
+            startActivity(select)
+        }
+    }
+
+    //handler for the Add Ranged button
+    inner class AddRangedHandler: View.OnClickListener{
+        override fun onClick(v: View?) {
+            win!!.exitTransition = Explode()
+            //afterAdd=true
+            val select = Intent(this@PageFragment.context,AddRangedActivity::class.java)
+            startActivity(select)
+        }
+    }
+
+    //set listeners for text fields
     private fun setHandlers(type: String){
         val inputs = InputArray(type,rViews[type]!!)
         for (v:TextView in inputs.inputs!!){
@@ -138,30 +186,56 @@ class PageFragment : Fragment() {
         }
     }
 
+    //track the current page
     fun setP(p: Int){
         this_page = p
     }
 
+    //re-build the skills table
     fun setSkills(){
         skill_Layout.removeAllViewsInLayout( )
-        val grid = Skilltable.newInstance(rView,resources)
+        val grid = Skilltable.newInstance(rView,this)
         val add = Button(rView!!.context)
         add.text = resources.getText(R.string.but_newskill)
         add.background = resources.getDrawable(android.R.color.background_dark,null)
         add.setTextColor(resources.getColor(android.R.color.white,null))
-        add.setOnClickListener(AddHandler())
+        add.setOnClickListener(AddSkillHandler())
         val ap = GridLayout.LayoutParams()
-        grid.setParams(App.current.getSkills().size+2,0,ap)
+        grid.setParams(App.current.skills.size+2,0,ap)
         grid.addView( add, ap)
         skill_Layout.addView( grid )
     }
 
+    //re-build the melee table
+    fun setWeapons(){
+        Weapon_Tables.removeAllViewsInLayout( )
+        val grid_m = Weapontable.newMelee(rView,resources.getString(R.string.melee_title),this)
+        val addm = Button(rView!!.context)
+        addm.text = resources.getText(R.string.but_newmelee)
+        addm.background = resources.getDrawable(android.R.color.background_dark,null)
+        addm.setTextColor(resources.getColor(android.R.color.white,null))
+        addm.setOnClickListener(AddMllHandler())
+        grid_m.addView( addm)
+        Weapon_Tables.addView( grid_m )
+
+        val grid_r = Weapontable.newRanged(rView,resources.getString(R.string.ranged_title),this)
+        val addr = Button(rView!!.context)
+        addr.text = resources.getText(R.string.but_newranged)
+        addr.background = resources.getDrawable(android.R.color.background_dark,null)
+        addr.setTextColor(resources.getColor(android.R.color.white,null))
+        addr.setOnClickListener(AddRangedHandler())
+        grid_r.addView( addr)
+        grid_r.setPadding(0,10,0,0)
+        Weapon_Tables.addView( grid_r )
+    }
+
+    //set text fields in the current page
     internal fun setFragment(type: String) {
         if(page == this_page) {
             val inputs = InputArray(type, rViews[type]!!)
             for (v: TextView in inputs.inputs!!) {
                 //if (v.id != curr) {
-                Log.w(App.current.name[v.id], App.current.getAttrById(v.id))
+                Log.w(App.current.index[v.id], App.current.getAttrById(v.id))
                 if (type == "Description") {
                     v.text = App.current.getDescById(v.id)
                 } else {
@@ -172,6 +246,9 @@ class PageFragment : Fragment() {
         }
     }
 
+    /*handler for the text fields
+    updates other text fields that have been altered by the new input
+     */
     inner class TextHandler(p: TextView): TextWatcher
     {
         private val id: Int = p.id
@@ -180,9 +257,9 @@ class PageFragment : Fragment() {
         override fun afterTextChanged(s: Editable?) {
             if((s.toString() != App.current.getAttrById(id)) && s.toString() != "" && page == this_page) {
                 when (sec) {
-                    "Desc" -> App.current.setDesc(s.toString(), id)
+                    "Desc" -> App.current.setDescById(s.toString(), id)
                     "Attr" -> {
-                        val name = App.current.name[id]
+                        val name = App.current.index[id]
                         Log.w("$name changed to",s.toString())
                         if(id == R.id.speed_input){
                             App.current.setById(id, s.toString().toFloat(), 0, 0)
@@ -219,7 +296,8 @@ class PageFragment : Fragment() {
                 R.layout.fragment_description,
                 R.layout.fragment_attributes,
                 R.layout.fragment_reference,
-                R.layout.fragment_skills)
+                R.layout.fragment_skills,
+                R.layout.fragment_weapons)
         var win:Window? = null
         var rViews: MutableMap<String,View> = mutableMapOf()
         var page: Int = 0

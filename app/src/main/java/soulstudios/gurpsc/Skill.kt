@@ -2,6 +2,7 @@ package soulstudios.gurpsc
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.relation.ToOne
 
 /**
  * Created by soulo_000 on 10/13/2017.
@@ -26,12 +27,13 @@ class Skill(){
     var level:Int = 1
     var rank:Int = 0
     var cost:Int = 1
+    //lateinit var player: ToOne<GCharacter>
 
     init{
 
     }
 
-    constructor(n:String,a:String,s:String?,note:String,d:String,l:Int):this(){
+    constructor(p: GCharacter,n:String,a:String,s:String?,note:String,d:String,l:Int):this(){
         this.name = n
         this.att = a
         this.spec = s
@@ -39,16 +41,19 @@ class Skill(){
         this.diff = difficulty[d]!!
         this.diff_str = d
         this.level = l
+        //this.player.target = p
 
         rank = diff+level
 
         cost = pointCost()
     }
 
+    //re-calculate overall rank of skill
     fun changeRank(){
         rank = diff+level
     }
 
+    //re-calculate the point cost of the skill
     fun pointCost():Int{
         when{
             level == 1 -> cost = 1

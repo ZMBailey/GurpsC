@@ -5,20 +5,21 @@ import io.objectbox.annotation.Backlink
 import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.relation.ToMany
 
 /**
  * Created by soulo_000 on 9/29/2017.
  */
-
-class GCharacter {
-    var id: Long = 0
-    private var points: Int = 0
+@Entity
+class GCharacter() {
+    @Id var id: Long = 0
+    var points: Int = 0
     //----
-    //    private String name;
-    //    private String title;
-    //    private String religion;
+    var name = ""
+    var desc: String = ""
+    var attr: String = ""
     //----
-    private var description: MutableMap<String,String> = hashMapOf(
+    @Transient private var description: MutableMap<String,String> = hashMapOf(
             "Name" to "",
             "Title" to "",
             "Religion" to "",
@@ -33,7 +34,7 @@ class GCharacter {
             "Skin" to "",
             "Hand" to "")
     //----
-    var attributes: MutableMap<String, Int> = hashMapOf(
+    @Transient var attributes: MutableMap<String, Int> = hashMapOf(
             "Str" to 10,
             "Dex" to 10,
             "IQ" to 10,
@@ -77,7 +78,7 @@ class GCharacter {
             "LiftCarry" to 300,
             "LiftShift" to 1000)
     //----
-    private var setters: Map<String, Update> = hashMapOf(
+    @Transient private var setters: Map<String, Update> = hashMapOf(
             "Str" to SetStr(),
             "Dex" to SetDex(),
             "IQ" to SetIQ(),
@@ -94,7 +95,7 @@ class GCharacter {
             "Lift" to SetLift(),
             "LiftMove" to SetLiftMove())
     //----
-    var name: Map<Int,String> = hashMapOf(
+    @Transient var index: Map<Int,String> = hashMapOf(
             R.id.name_input to "Name",
             R.id.title_input to "Title",
             R.id.religion_input to "Religion",
@@ -158,22 +159,24 @@ class GCharacter {
             R.id.carry_no to "LiftCarry",
             R.id.shift_no to "LiftShift"
     )
-    private var skills:MutableList<Skill> = mutableListOf(
-            Skill("Lockpicking","Dex",null,"None","Av",2),
-            Skill("Hacking","IQ",null,"None","Av",3)
-    )
-    private var speed = 5f
+    lateinit var skills:ToMany<Skill>
+    lateinit var melee:ToMany<Melee>
+    lateinit var ranged:ToMany<Ranged>
+    var speed = 5f
     //----
 
     init{
         points = 100
-        //setFunctions()
+    }
+
+    constructor(id: Long,n: String, d: String, a: String, p: Int, s: Float,sk:ToMany<Skill>):this(){
+
     }
 
     /*setById allows the Set function to be called using an Id number
     * of a field instead of the name.*/
     fun setById(field: Int,input: Number,stat1: Int,stat2: Int){
-        set(name[field]!!,input,stat1,stat2)
+        set(index[field]!!,input,stat1,stat2)
     }
 
     /*Set sets the Input into the specified Field.
@@ -192,21 +195,23 @@ class GCharacter {
         }
     }
 
-    fun setDesc(input: String, field: Int) {
-        description.put(name[field]!!, input)
+    fun setDescById(input: String, field: Int) {
+        description.put(index[field]!!, input)
     }
 
-    fun setDescById(input: String, field: String){
+    fun setDesc(input: String, field: String){
         description.put(field,input)
     }
 
     /*External getters for attribute and description HashMaps
-    * accepts an Int containing the ID number of a field, translates
-    * that into a field name, and uses the name to index into the HashMap.
-    * if the HashMap does not contain the field, it returns 0 or blank.*/
+    * getDescById and getAttrById accept an Int containing the ID number
+    * of a field, translates that into a field name, and uses the name to
+    * index into the HashMap. getDesc and getAttr accepts the name of the
+    * field as a string directly.
+    * If the HashMap does not contain the field, it returns 0 or blank.*/
     fun getDescById(field: Int): String? {
-        return if (description.containsKey(name[field])) {
-            description[name[field]]
+        return if (description.containsKey(index[field])) {
+            description[index[field]]
         } else {
             ""
         }
@@ -221,7 +226,7 @@ class GCharacter {
     }
 
     fun getAttrById(field: Int): String {
-        val attr = name[field]!!
+        val attr = index[field]!!
         return getAttr(attr)
     }
 
@@ -248,45 +253,86 @@ class GCharacter {
         }
     }
 
-    fun getSkills():MutableList<Skill>{
-        return skills
+    /*
+    addSkill() adds a new skill -------------------------------------------------------->
+    removeSkill() removes a skill
+     */
+    fun addMelee(n:String,wc:String,dm:String,rh:String,pa:String){
+        val w = Melee(n,wc,dm,rh,pa)
+        addWeapon(w)
+    }
+
+    fun addRanged(n:String,wc:String,dm:String,a:String,rn:String
+                  ,rf:String,sh:String,rl:String){
+        val w = Ranged(n,wc,dm,a,rn,rf,sh,rl)
+        addWeapon(w)
+    }
+
+    fun addWeapon(w:Weapon) {
+        if (w is Melee) {
+            Log.w("added",w.name)
+            melee.add(w)
+        } else if (w is Ranged){
+            ranged.add(w)
+        }
+    }
+
+    fun removeWeapon(w:Weapon){
+        if(w is Melee) {
+            //w.player.target = null
+            melee.remove(w)
+        }else if(w is Ranged){
+            //w.player.target = null
+            ranged.remove(w)
+        }
     }
 
     fun addSkill(name:String,attr:String,spec:String?,note:String,diff:String,lvl:Int){
-        val newskill = Skill(name,attr,spec,note,diff,lvl)
+        val newskill = Skill(this,name,attr,spec,note,diff,lvl)
         skills.add(newskill)
     }
 
     fun removeSkill(s:Skill){
+        //s.player.target = null
         skills.remove(s)
     }
 
-    fun export(): GChar{
-        val d = description.values.joinToString{e -> e}
-        val a = attributes.values.joinToString(",")
-        Log.w("D",d)
-        Log.w("A",a)
-        return GChar(id,description["Name"]!!,d,a,points,speed,skills)
+    fun getSkillList():String{
+        var skilllist = ""
+        for(item:Skill in skills){
+            skilllist += item.name + " | "
+        }
+
+        return skilllist
     }
 
-    fun load(new: GChar){
+    /*
+    export() to prepare the object to be stored in the objectbox ----------------------->
+    load() to populate the attributes and description after retrieving
+    and object from the objectbox
+     */
+
+    fun export(){
+        desc = description.values.joinToString{e -> e}
+        attr = attributes.values.joinToString(",")
+        name = description["Name"]!!
+    }
+
+    fun load(){
+        val rg = ","
+        val dlist = desc.split(rg).toList()
+        val alist = attr.split(rg).toList()
+
         var i = 0
-        points = new.points
-        id = new.id
-        skills = new.skills
-        val d:List<String> = new.getD()
-        val a:List<Int> = new.getA()
         for(f:String in description.keys){
-            description.put(f,d[i])
+            description.put(f,dlist[i])
             i++
         }
         i=0
         for(f:String in attributes.keys){
-            Log.w(f,a[i].toString())
-            if(f == "Speed"){
-                speed = new.speed
-            }else {
-                attributes[f] = a[i]
+            Log.w(f,alist[i])
+            if(f != "Speed"){
+                attributes[f] = alist[i].toInt()
             }
             i++
         }
@@ -300,7 +346,7 @@ class GCharacter {
         fun execute(input: Float, stat1: Int, stat2: Int)
     }
 
-    //--------set main Attributes---------------------------------------->
+    //--------set main Attributes------------------------------------------------------------>
     private inner class SetStr : Update {
         override fun execute(input: Int, stat1: Int, stat2: Int) {
             if(input>2) {
@@ -366,7 +412,7 @@ class GCharacter {
         override fun execute(input: Float, stat1: Int, stat2: Int) {}
     }
 
-    //--------Set Secondary------------------------------------------------->
+    //--------Set Secondary------------------------------------------------------------------->
     private inner class SetWill : Update {
         override fun execute(input: Int, stat1: Int, stat2: Int) {
             val iq = attributes["IQ"]!!

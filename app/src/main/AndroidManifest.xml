@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".CharSheetActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_char_sheet"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,12 +23,27 @@
         </activity>
         <activity
             android:name=".LoadActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_load"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".AddSkillActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/title_activity_add_skill"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddMeleeActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/but_add_w"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AddRangedActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/but_add_w"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"></activity>
     </application>
 
 </manifest>

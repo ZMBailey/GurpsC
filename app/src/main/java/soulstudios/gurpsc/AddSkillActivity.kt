@@ -36,6 +36,7 @@ class AddSkillActivity : AppCompatActivity() {
         add_back.setOnClickListener(BackHandler())
         add_add.setOnClickListener(AddButtonHandler())
         sdiff.onItemSelectedListener = DiffHandler()
+        sattr.onItemSelectedListener = AttrHandler()
     }
 
     inner class BackHandler:View.OnClickListener{

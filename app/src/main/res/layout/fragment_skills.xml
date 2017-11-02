@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,13 +8,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:id="@+id/skill_Layout"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="soulstudios.gurpsc.PageFragment">
 
 
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="5"
+        android:columnCount="6"
         android:background="@drawable/outer_border"
         android:id="@+id/skill_grid">
 
@@ -26,7 +28,7 @@
                 android:gravity="center"
                 android:layout_column="0"
                 android:layout_row="0"
-                android:layout_columnSpan="5"
+                android:layout_columnSpan="6"
                 android:text="@string/skills_title" />
 
             <TextView
@@ -89,7 +91,18 @@
                 android:layout_row="1"
                 android:text="@string/skill_rank" />
 
+        <TextView
+            android:id="@+id/Sk_Del"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:background="@android:color/black"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_column="5"
+            android:layout_row="1"
+            android:text="@string/but_del" />
+
 
 
     </GridLayout>
-</RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

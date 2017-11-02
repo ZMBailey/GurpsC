@@ -4,18 +4,22 @@ import android.graphics.Point
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.Toast
 import io.objectbox.kotlin.boxFor
 import kotlinx.android.synthetic.main.content_load.*
-import soulstudios.gurpsc.App.Companion.current
 
 class LoadActivity : AppCompatActivity() {
 
-    private val gc =  GChar::class
+    private val gc =  GCharacter::class
+    private val sk = Skill::class
     private var charBox = App.boxStore.boxFor(gc)
+    private var meleeBox = App.boxStore.boxFor(Melee::class)
+    private var rangedBox = App.boxStore.boxFor(Ranged::class)
+    private var skillBox = App.boxStore.boxFor(sk)
     private var buttonWidth: Int = 0
     private var buttons: MutableMap<Button,Long> = mutableMapOf()
 
@@ -24,27 +28,26 @@ class LoadActivity : AppCompatActivity() {
         setContentView(R.layout.activity_load)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-        var size = Point()
+        val size = Point()
         windowManager.defaultDisplay.getSize(size)
         buttonWidth = size.x
         updateView()
     }
 
     private fun updateView( ) {
-        val chars: MutableList<GChar> = charBox.all
+        val chars: MutableList<GCharacter> = charBox.all
+        char_list.removeAllViewsInLayout( )
+
+        val grid = GridLayout(this)
+        grid.rowCount = chars.size+1
+        grid.columnCount = 2
+
         if( chars.size > 0 ) {
-            char_list.removeAllViewsInLayout( )
 
-            val grid = GridLayout(this)
-            grid.rowCount = chars.size
-            grid.columnCount = 2
-
-            val button: Array<Button> =Array<Button>(chars.size,{i -> Button(this)})
-            val delete: Array<Button> =Array<Button>(chars.size,{i -> Button(this)})
+            val button = List(chars.size){ Button(this)}
+            val delete = List(chars.size){ Button(this)}
             val bh = ButtonHandler()
             val dh = DeleteHandler()
-
-            var lp:GridLayout.LayoutParams = GridLayout.LayoutParams()
 
             for ((i,gc) in chars.withIndex()) {
                 button[i].text = gc.name
@@ -64,26 +67,29 @@ class LoadActivity : AppCompatActivity() {
                 grid.addView( delete[i], (buttonWidth*.35).toInt(),
                         GridLayout.LayoutParams.WRAP_CONTENT )
             }
-
-            //create back button
-            val back = Button(this)
-            back.text = resources.getText(R.string.but_back)
-            back.background = resources.getDrawable(android.R.color.background_dark,null)
-            back.setTextColor(resources.getColor(android.R.color.white,null))
-            back.setOnClickListener(){ v -> this@LoadActivity.finishAfterTransition() }
-            grid.addView( back, buttonWidth/2,
-                    GridLayout.LayoutParams.WRAP_CONTENT )
-
-            char_list.addView( grid )
         }
+
+        //create back button
+        val back = Button(this)
+        back.text = resources.getText(R.string.but_back)
+        back.background = resources.getDrawable(android.R.color.background_dark,null)
+        back.setTextColor(resources.getColor(android.R.color.white,null))
+        back.setOnClickListener{ _ -> this@LoadActivity.finishAfterTransition() }
+        grid.addView( back, buttonWidth/2,
+                GridLayout.LayoutParams.WRAP_CONTENT )
+
+        char_list.addView( grid )
     }
 
     inner class ButtonHandler: View.OnClickListener {
         override fun onClick( v:View ) {
 
-            val temp:GChar = charBox.get(buttons[v]!!)
-            App.current.load(temp)
-            val selected: String = temp.name + " Loaded"
+            App.current = charBox.get(buttons[v]!!)
+            App.current.load()
+            val selected: String = App.current.name + " Loaded"
+            Log.w("Skills",App.current.getSkillList())
+            Log.w("LoadAttr",App.current.attr)
+            Log.w("FullAttr",App.current.attributes.toString())
             Toast.makeText( this@LoadActivity, selected,
                     Toast.LENGTH_SHORT ).show(
             )
@@ -94,7 +100,7 @@ class LoadActivity : AppCompatActivity() {
     inner class DeleteHandler: View.OnClickListener {
         override fun onClick( v:View ) {
             charBox.remove(buttons[v]!!)
-            val selected: String = "Character Deleted"
+            val selected = "Character Deleted"
             Toast.makeText( this@LoadActivity, selected,
                     Toast.LENGTH_SHORT ).show( )
             this@LoadActivity.updateView()

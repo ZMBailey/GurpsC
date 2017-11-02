@@ -1,6 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <string name="app_name">GurpsC</string>
     <string name="title_activity_char_sheet">Character Sheet</string>
+    <!--Table names~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <string name="action_settings">Settings</string>
     <string name="id_title">Identity</string>
     <string name="desc_title">Description</string>
@@ -8,14 +9,26 @@
     <string name="hpfp_title">Health/Fatigue</string>
     <string name="melee_title">Melee Weapons</string>
     <string name="ranged_title">Ranged Weapons</string>
-    <string name="enc_title">Encumberance &amp; Dodge</string>
-    <string name="lvl_title">Encumberance</string>
+    <string name="advantages">Advantages</string>
+    <string name="disadvantages">Disadvantages</string>
+    <string name="enc_title">Encumbrance &amp; Dodge</string>
+    <string name="skills_title">Skills</string>
+    <!--Column Names~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <!--Skills-->
+    <string name="skill_name">Name</string>
+    <string name="skill_spec">Spec.</string>
+    <string name="skill_diff">Diff.</string>
+    <string name="skill_attr">Attr.</string>
+    <string name="skill_rank">Rank</string>
+    <!--Encumbrance-->
+    <string name="lvl_title">Encumbrance</string>
     <string name="load_title">Max Load</string>
     <string name="move_title">Move</string>
     <string name="dodge_title">Dodge</string>
     <string name="lift_title">Lift &amp; Move</string>
     <string name="sense_title">Senses</string>
     <string name="status_title">Status</string>
+    <!--Encumbrance fields-->
     <string name="none">None(0)</string>
     <string name="light">Light(1)</string>
     <string name="medium">Medium(2)</string>
@@ -29,29 +42,31 @@
     <string name="carry">Carry on Back:</string>
     <string name="shift">Shift Slightly:</string>
     <string name="hit_loc">Hit Location</string>
-    <string name="advantages">Advantages</string>
-    <string name="disadvantages">Disadvantages</string>
-    <string name="title_activity_main">MainActivity</string>
+
+    <!--buttons~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <string name="but_save">Save Character</string>
     <string name="but_load">Load Character</string>
     <string name="but_new">New Character</string>
     <string name="but_back">Back</string>
     <string name="but_delete">Delete</string>
+    <string name="but_del">X</string>
     <string name="but_newskill">New Skill</string>
+    <string name="but_newmelee">New Melee</string>
+    <string name="but_newranged">New Ranged</string>
+    <string name="but_add_w">Add Weapon</string>
     <string name="but_add">Add Skill</string>
+
+    <!--page titles~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_cs">CSActivity</string>
     <string name="title_activity_load">Load Character</string>
-    <string name="skills_title">Skills</string>
-    <string name="skill_name">Name</string>
-    <string name="skill_spec">Spec.</string>
-    <string name="skill_diff">Diff.</string>
-    <string name="skill_attr">Attr.</string>
-    <string name="skill_rank">Rank</string>
+    <string name="title_activity_add_skill">AddSkillActivity</string>
+
+    <!--Add Skill fields~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
     <string name="add_name">Skill Name:</string>
     <string name="add_spec">Specialization:</string>
     <string name="add_diff">Difficulty:</string>
     <string name="add_attr">Attribute:</string>
-    <string name="title_activity_add_skill">AddSkillActivity</string>
 
     <string-array name="diff_menu">
         <item android:tag="Ea">Easy</item>
@@ -66,4 +81,29 @@
         <item android:tag="IQ">IQ</item>
         <item android:tag="Health">Health</item>
     </string-array>
+
+    <!--Weapon~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+    <string name="w_class">Weapon Class:</string>
+    <string name="w_name">Weapon Name:</string>
+    <string name="w_tl">TL:</string>
+    <string name="w_dmg">Damage:</string>
+    <string name="w_weight">Weight:</string>
+    <string name="w_cost">Cost:</string>
+    <string name="w_st">St:</string>
+    <!--Melee-->
+    <string name="w_reach">Reach:</string>
+    <string name="w_parry">Parry:</string>
+    <!--Ranged-->
+    <string name="w_acc">Accuracy:</string>
+    <string name="title_acc">Acc:</string>
+    <string name="w_range">Range:</string>
+    <string name="w_rof">RoF:</string>
+    <string name="w_shots">Shots:</string>
+    <string name="w_blk">Bulk:</string>
+    <string name="w_rcl">Rcl:</string>
+    <string name="w_lc">LC:</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
 </resources>
