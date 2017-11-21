@@ -87,9 +87,8 @@ class LoadActivity : AppCompatActivity() {
             App.current = charBox.get(buttons[v]!!)
             App.current.load()
             val selected: String = App.current.name + " Loaded"
-            Log.w("Skills",App.current.getSkillList())
-            Log.w("LoadAttr",App.current.attr)
-            Log.w("FullAttr",App.current.attributes.toString())
+            Log.w("LoadDesc",App.current.desc)
+            Log.w("FullDesc",App.current.description.toString())
             Toast.makeText( this@LoadActivity, selected,
                     Toast.LENGTH_SHORT ).show(
             )

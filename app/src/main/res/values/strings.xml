@@ -54,6 +54,7 @@
     <string name="but_newmelee">New Melee</string>
     <string name="but_newranged">New Ranged</string>
     <string name="but_add_w">Add Weapon</string>
+    <string name="but_add_a">Add Advantage</string>
     <string name="but_add">Add Skill</string>
 
     <!--page titles~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -105,5 +106,13 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <!--Advantages-->
+    <string name="add_ad">Add Advantage/Disadvantage</string>
+    <string name="a_name">Name:</string>
+    <string name="a_desc">Description:</string>
+    <string name="a_cost">Cost:</string>
+    <string name="a_has_level">Has Levels:</string>
+    <string name="a_lvls">Lvls:</string>
+    <string name="a_cost_level">Cost/Lvl:</string>
 
 </resources>

@@ -61,7 +61,8 @@ class CharSheetActivity : AppCompatActivity() {
                 PageFragment.newInstance(3,window),
                 PageFragment.newInstance(4,window),
                 PageFragment.newInstance(5,window),
-                PageFragment.newInstance(6,window)
+                PageFragment.newInstance(6,window),
+                PageFragment.newInstance(7,window)
         )
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
@@ -105,8 +106,8 @@ class CharSheetActivity : AppCompatActivity() {
         }
 
         override fun getCount(): Int {
-            // Show 4 total pages.
-            return 6
+            // Show 7 total pages.
+            return 7
         }
 
         override fun getPageTitle(position: Int): CharSequence? {
@@ -117,6 +118,7 @@ class CharSheetActivity : AppCompatActivity() {
                 3 -> return "Reference"
                 4 -> return "Skills"
                 5 -> return "Weapons"
+                6 -> return "Advantages"
             }
             return null
         }

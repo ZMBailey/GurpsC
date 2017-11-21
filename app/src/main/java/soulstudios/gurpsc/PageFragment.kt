@@ -17,6 +17,7 @@ import android.view.Window
 import android.widget.*
 import io.objectbox.kotlin.boxFor
 import kotlinx.android.synthetic.main.content_load.*
+import kotlinx.android.synthetic.main.fragment_advantages.*
 import kotlinx.android.synthetic.main.fragment_options.view.*
 import kotlinx.android.synthetic.main.fragment_skills.*
 import kotlinx.android.synthetic.main.fragment_weapons.*
@@ -90,6 +91,7 @@ class PageFragment : Fragment() {
         when {
             (page == R.layout.fragment_skills) -> setSkills()
             (page == R.layout.fragment_weapons) -> setWeapons()
+            (page == R.layout.fragment_advantages) -> setAdvs()
             else -> setFragment(type)
         }
     }
@@ -158,6 +160,15 @@ class PageFragment : Fragment() {
         }
     }
 
+    //handler for the Add Advantage button
+    inner class AddAdvHandler: View.OnClickListener{
+        override fun onClick(v: View?) {
+            win!!.exitTransition = Explode()
+            val select = Intent(this@PageFragment.context,AddAdvActivity::class.java)
+            startActivity(select)
+        }
+    }
+
     //handler for the Add Melee button
     inner class AddMllHandler: View.OnClickListener{
         override fun onClick(v: View?) {
@@ -200,9 +211,9 @@ class PageFragment : Fragment() {
         add.background = resources.getDrawable(android.R.color.background_dark,null)
         add.setTextColor(resources.getColor(android.R.color.white,null))
         add.setOnClickListener(AddSkillHandler())
-        val ap = GridLayout.LayoutParams()
-        grid.setParams(App.current.skills.size+2,0,ap)
-        grid.addView( add, ap)
+//        val ap = GridLayout.LayoutParams()
+//        grid.setParams(App.current.skills.size+2,0,ap)
+        grid.addView( add)
         skill_Layout.addView( grid )
     }
 
@@ -227,6 +238,21 @@ class PageFragment : Fragment() {
         grid_r.addView( addr)
         grid_r.setPadding(0,10,0,0)
         Weapon_Tables.addView( grid_r )
+    }
+
+    //re-build the advantages table
+    fun setAdvs(){
+        adv_Layout.removeAllViewsInLayout( )
+        val grid = Advantagetable.newInstance(rView,resources.getString(R.string.advantages),this)
+        val add = Button(rView!!.context)
+        add.text = resources.getText(R.string.but_add_a)
+        add.background = resources.getDrawable(android.R.color.background_dark,null)
+        add.setTextColor(resources.getColor(android.R.color.white,null))
+        add.setOnClickListener(AddAdvHandler())
+//        val ap = GridLayout.LayoutParams()
+//        grid.setParams(App.current.skills.size+2,0,ap)
+        grid.addView( add)
+        adv_Layout.addView( grid )
     }
 
     //set text fields in the current page
@@ -297,7 +323,8 @@ class PageFragment : Fragment() {
                 R.layout.fragment_attributes,
                 R.layout.fragment_reference,
                 R.layout.fragment_skills,
-                R.layout.fragment_weapons)
+                R.layout.fragment_weapons,
+                R.layout.fragment_advantages)
         var win:Window? = null
         var rViews: MutableMap<String,View> = mutableMapOf()
         var page: Int = 0

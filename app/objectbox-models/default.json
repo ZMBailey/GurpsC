@@ -90,7 +90,7 @@
     },
     {
       "id": "3:3717853608072027112",
-      "lastPropertyId": "6:820210330009466502",
+      "lastPropertyId": "9:1130808845881955426",
       "name": "GCharacter",
       "properties": [
         {
@@ -116,6 +116,18 @@
         {
           "id": "6:820210330009466502",
           "name": "speed"
+        },
+        {
+          "id": "7:5796177642534260809",
+          "name": "points_total"
+        },
+        {
+          "id": "8:1454981833464421044",
+          "name": "skill_points"
+        },
+        {
+          "id": "9:1130808845881955426",
+          "name": "adv_points"
         }
       ],
       "relations": [
@@ -130,6 +142,10 @@
         {
           "id": "4:1566129439735122892",
           "name": "skills"
+        },
+        {
+          "id": "5:2326450462958798847",
+          "name": "advantages"
         }
       ]
     },
@@ -252,11 +268,47 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "6:3879503300092555462",
+      "lastPropertyId": "7:2623650777913656108",
+      "name": "Advantage",
+      "properties": [
+        {
+          "id": "1:158473616600917036",
+          "name": "id"
+        },
+        {
+          "id": "2:3406708234981663077",
+          "name": "name"
+        },
+        {
+          "id": "3:7438399741880440299",
+          "name": "cost"
+        },
+        {
+          "id": "4:8369947406290677429",
+          "name": "hasLevels"
+        },
+        {
+          "id": "5:6938781306314881292",
+          "name": "levelCost"
+        },
+        {
+          "id": "6:5382925603950223930",
+          "name": "levels"
+        },
+        {
+          "id": "7:2623650777913656108",
+          "name": "desc"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "5:6092731523271934592",
+  "lastEntityId": "6:3879503300092555462",
   "lastIndexId": "3:4981058497292641194",
-  "lastRelationId": "4:1566129439735122892",
+  "lastRelationId": "5:2326450462958798847",
   "lastSequenceId": "0:0",
   "modelVersion": 4,
   "modelVersionParserMinimum": 4,

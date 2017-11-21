@@ -12,7 +12,7 @@
     tools:context="soulstudios.gurpsc.PageFragment">
 
 
-    <GridLayout
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="6"
@@ -31,6 +31,8 @@
                 android:layout_columnSpan="6"
                 android:text="@string/skills_title" />
 
+        <TableRow>
+
             <TextView
                 android:id="@+id/Sk_Name"
                 android:layout_width="wrap_content"
@@ -38,9 +40,7 @@
                 android:background="@android:color/black"
                 android:textColor="@android:color/white"
                 android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_column="0"
-                android:layout_row="1"
+                android:layout_weight="1"
                 android:text="@string/skill_name" />
 
             <TextView
@@ -50,9 +50,7 @@
                 android:background="@android:color/black"
                 android:textColor="@android:color/white"
                 android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_column="1"
-                android:layout_row="1"
+                android:layout_weight="1"
                 android:text="@string/skill_spec" />
 
             <TextView
@@ -62,9 +60,7 @@
                 android:background="@android:color/black"
                 android:textColor="@android:color/white"
                 android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_column="2"
-                android:layout_row="1"
+                android:layout_weight="1"
                 android:text="@string/skill_diff" />
 
             <TextView
@@ -74,10 +70,26 @@
                 android:background="@android:color/black"
                 android:textColor="@android:color/white"
                 android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_column="3"
-                android:layout_row="1"
+                android:layout_weight="1"
                 android:text="@string/skill_attr" />
+
+            <TextView
+                android:id="@+id/Sk_up"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:text="@string/but_del" />
+
+            <TextView
+                android:id="@+id/Sk_dn"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:text="@string/but_del" />
 
             <TextView
                 android:id="@+id/Sk_Rank"
@@ -86,23 +98,19 @@
                 android:background="@android:color/black"
                 android:textColor="@android:color/white"
                 android:gravity="center"
-                android:layout_columnWeight="1"
-                android:layout_column="4"
-                android:layout_row="1"
+                android:layout_weight="1"
                 android:text="@string/skill_rank" />
 
-        <TextView
-            android:id="@+id/Sk_Del"
-            android:layout_width="17dp"
-            android:layout_height="17dp"
-            android:background="@android:color/black"
-            android:textColor="@android:color/white"
-            android:gravity="center"
-            android:layout_column="5"
-            android:layout_row="1"
-            android:text="@string/but_del" />
+            <TextView
+                android:id="@+id/Sk_Del"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:text="@string/but_del" />
 
+        </TableRow>
 
-
-    </GridLayout>
+    </TableLayout>
 </android.support.v4.widget.NestedScrollView>

@@ -1,0 +1,183 @@
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:id="@+id/adv_Layout"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="soulstudios.gurpsc.PageFragment">
+
+
+    <LinearLayout
+        android:id="@+id/Adv_Tables"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="5"
+            android:background="@drawable/outer_border"
+            android:id="@+id/advantage_grid">
+
+            <TextView
+                android:id="@+id/adv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:layout_columnSpan="5"
+                android:text="@string/advantages" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/W_Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/black"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:text="@string/skill_name" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:labelFor="@+id/wClass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/w_class"/>
+
+                    <TextView
+                        android:id="@+id/wClass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10" />
+
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:gravity="end"
+                        android:contentDescription="@string/but_del"
+                        android:src="@android:drawable/ic_menu_delete" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:labelFor="@+id/wTL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/w_tl"/>
+
+                    <TextView
+                        android:id="@+id/wTL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="2" />
+
+                    <TextView
+                        android:labelFor="@+id/wST"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/w_st"/>
+
+                    <TextView
+                        android:id="@+id/wST"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="2" />
+
+                    <TextView
+                        android:labelFor="@+id/wWeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/w_weight"/>
+
+                    <TextView
+                        android:id="@+id/wWeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="2" />
+
+                    <TextView
+                        android:labelFor="@+id/wReach"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/w_reach"/>
+
+                    <TextView
+                        android:id="@+id/wReach"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:labelFor="@+id/wDmg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/w_dmg"/>
+
+                    <TextView
+                        android:id="@+id/wDmg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="5" />
+
+                    <TextView
+                        android:labelFor="@+id/wParry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/w_parry"/>
+
+                    <TextView
+                        android:id="@+id/wParry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="3" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </GridLayout>
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

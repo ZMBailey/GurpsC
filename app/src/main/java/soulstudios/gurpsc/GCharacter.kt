@@ -1,25 +1,28 @@
 package soulstudios.gurpsc
 
 import android.util.Log
-import io.objectbox.annotation.Backlink
-import io.objectbox.annotation.Convert
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToMany
 
 /**
- * Created by soulo_000 on 9/29/2017.
+ * GCharacter class
+ * contains all attributes for a single character, re-calculates
+ * every time a new attribute is entered.
  */
 @Entity
 class GCharacter() {
     @Id var id: Long = 0
     var points: Int = 0
+    var points_total: Int = 100
+    var skill_points: Int = 0
+    var adv_points: Int = 0
     //----
     var name = ""
     var desc: String = ""
     var attr: String = ""
     //----
-    @Transient private var description: MutableMap<String,String> = hashMapOf(
+    @Transient var description: MutableMap<String,String> = hashMapOf(
             "Name" to "",
             "Title" to "",
             "Religion" to "",
@@ -162,14 +165,15 @@ class GCharacter() {
     lateinit var skills:ToMany<Skill>
     lateinit var melee:ToMany<Melee>
     lateinit var ranged:ToMany<Ranged>
+    lateinit var advantages:ToMany<Advantage>
     var speed = 5f
     //----
 
     init{
-        points = 100
+        points = 0
     }
 
-    constructor(id: Long,n: String, d: String, a: String, p: Int, s: Float,sk:ToMany<Skill>):this(){
+    constructor(id: Long,n: String, d: String, a: String, p: Int, sp: Int, s: Float,sk:ToMany<Skill>):this(){
 
     }
 
@@ -297,13 +301,30 @@ class GCharacter() {
         skills.remove(s)
     }
 
-    fun getSkillList():String{
-        var skilllist = ""
-        for(item:Skill in skills){
-            skilllist += item.name + " | "
-        }
+    fun addAdv(name:String,cost:Int,hl:Boolean,lc:Int,lvl:Int,d:String){
+        val newadv = Advantage(name,cost,hl,lc,lvl,d)
+        advantages.add(newadv)
+    }
 
-        return skilllist
+    fun removeAdv(a:Advantage){
+        //s.player.target = null
+        advantages.remove(a)
+    }
+
+    fun recalcPoints(){
+        skill_points = 0
+        adv_points = 0
+        for(item:Skill in skills){
+           skill_points += item.pointCost()
+        }
+        for(item:Advantage in advantages){
+            item.findCost()
+            adv_points += item.cost
+        }
+    }
+
+    fun showPoints():Int{
+        return points+skill_points+adv_points
     }
 
     /*
@@ -313,7 +334,7 @@ class GCharacter() {
      */
 
     fun export(){
-        desc = description.values.joinToString{e -> e}
+        desc = description.values.joinToString(",")
         attr = attributes.values.joinToString(",")
         name = description["Name"]!!
     }

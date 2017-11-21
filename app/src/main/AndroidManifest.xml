@@ -42,8 +42,13 @@
             android:label="@string/but_add_w"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".AddAdvActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/but_add_a"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"></activity>
+            android:label="@string/title_activity_main"/>
     </application>
 
 </manifest>

@@ -9,8 +9,10 @@ import android.widget.*
 /**
  * Created by soulo_000 on 10/17/2017.
  */
-class Skilltable(context:Context): GridLayout(context) {
+class Skilltable(context:Context): TableLayout(context) {
     var buttons:MutableMap<ImageView,Skill> = mutableMapOf()
+    var plus:MutableMap<TextView,Int> = mutableMapOf()
+    var minus:MutableMap<TextView,Int> = mutableMapOf()
     lateinit var par:PageFragment
 
     fun setTitle(tv:TextView){
@@ -52,6 +54,83 @@ class Skilltable(context:Context): GridLayout(context) {
         }
     }
 
+    inner class PlusHandler:View.OnClickListener{
+        override fun onClick(v: View?) {
+            Log.w("Skill Name",App.current.skills[plus[v]!!].name)
+            App.current.skills[plus[v]!!].addRank()
+            Log.w("Skill Level",App.current.skills[plus[v]!!].level.toString())
+            par.setSkills()
+        }
+    }
+
+    inner class MinusHandler:View.OnClickListener{
+        override fun onClick(v: View?) {
+            App.current.skills[minus[v]!!].minusRank()
+            par.setSkills()
+        }
+    }
+
+    fun getEntry(lp:LinearLayout.LayoutParams):TableRow{
+        val entry = TableRow(context)
+        entry.orientation = LinearLayout.HORIZONTAL
+        entry.layoutParams = lp
+        return entry
+    }
+
+    fun skillEntry(sk:Skill,r:Int):TableRow{
+        val wValues:Array<String> = arrayOf(
+                sk.name,
+                sk.spec!!,
+                sk.diff_str,
+                sk.att,
+                "-",
+                "+",
+                (sk.rank + App.current.getAttr(sk.att).toInt()).toString()
+        )
+
+        val lp = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        val entry = TableRow(context)
+        entry.layoutParams = lp
+        //val entry = getEntry(lp)
+
+        val delete = ImageView(context)
+        delete.setImageDrawable(resources.getDrawable(android.R.drawable.ic_menu_delete,null))
+        delete.setOnClickListener( DeleteHandler() )
+        buttons.put(delete,sk)
+
+        val fields = List(7){TextView(context)}
+
+        val cl = List(3){TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)}
+        cl[0].weight = 0.5F
+        cl[1].weight = 1F
+        fields[4].setOnClickListener(MinusHandler())
+        fields[5].setOnClickListener(PlusHandler())
+
+        for((i,tv) in fields.withIndex()){
+            if (wValues[i] == "") {
+                tv.text = "N/A"
+            } else {
+                tv.text = wValues[i]
+            }
+            if(i == 4 || i == 5){
+                setTitle(tv)
+                entry.addView(tv,50,50)
+            }else {
+                if (r.rem(2) != 0) {
+                    setItemInverse(tv)
+                } else {
+                    setItem(tv)
+                }
+                entry.addView(tv,cl[1])
+            }
+        }
+        minus.put(fields[4],r)
+        plus.put(fields[5],r)
+        entry.addView(delete,50,50)
+
+        return entry
+    }
+
     companion object {
         fun newInstance(rView:View?,page:PageFragment):Skilltable{
             val skills: MutableList<Skill> = App.current.skills
@@ -62,106 +141,48 @@ class Skilltable(context:Context): GridLayout(context) {
                     R.string.skill_spec,
                     R.string.skill_diff,
                     R.string.skill_attr,
+                    R.string.but_del,
+                    R.string.but_del,
                     R.string.skill_rank,
                     R.string.but_del)
             page.resources
             val grid = Skilltable(rView!!.context)
+            grid.orientation = LinearLayout.VERTICAL
             grid.par = page
-            grid.rowCount = skills.size+3
-            grid.columnCount = 6
 
-            val lp: GridLayout.LayoutParams = GridLayout.LayoutParams()
-            lp.columnSpec = GridLayout.spec(0,6)
-            lp.rowSpec = GridLayout.spec(0,1)
-            lp.width = LayoutParams.MATCH_PARENT
-            lp.height = GridLayout.LayoutParams.WRAP_CONTENT
+            val lp = TableRow.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT)
 
-            var celp: GridLayout.LayoutParams = GridLayout.LayoutParams()
-            celp.height = GridLayout.LayoutParams.WRAP_CONTENT
-            celp.width = GridLayout.LayoutParams.WRAP_CONTENT
-            celp.rowSpec = GridLayout.spec(1,1)
+            val celp = TableRow.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
+            celp.weight = 1F
 
-            val title = List(7){TextView(rView.context)}
+            val title = List(9){TextView(rView.context)}
             title[0].text = res.getString(R.string.skills_title)
             grid.setTitle(title[0])
             title[0].layoutParams = lp
             grid.addView( title[0], lp)
 
-            for(i:Int in 1..6) {
+            val title_row = TableRow(rView.context)
+
+            for(i:Int in 1..8) {
                 title[i].text = res.getString(strings[i-1])
                 grid.setTitle(title[i])
-                celp =  GridLayout.LayoutParams()
-                celp.rowSpec = GridLayout.spec(1, 1)
-                celp.columnSpec = GridLayout.spec(i - 1, 1)
-                celp.columnSpec = GridLayout.spec(i - 1, 1f)
-                if(i < 6) {
-                    celp.height = GridLayout.LayoutParams.WRAP_CONTENT
-                    celp.width = GridLayout.LayoutParams.WRAP_CONTENT
-                }else{
-                    celp.height = 50
-                    celp.width = 50
+                if(i == 8 || i == 5 || i == 6) {
                     title[i].setTextColor(res.getColor(android.R.color.black,null))
+                    title_row.addView(title[i],50,50)
+                }else{
+                    title_row.addView(title[i],celp)
                 }
-                grid.addView(title[i], celp)
             }
-
+            title_row.layoutParams = lp
+            grid.addView(title_row,lp)
 
             if( skills.size > 0 && PageFragment.page == R.layout.fragment_skills) {
 
-                val name = List(skills.size){TextView(rView.context)}
-                val spec = List(skills.size){TextView(rView.context)}
-                val diff = List(skills.size){TextView(rView.context)}
-                val attr = List(skills.size){TextView(rView.context)}
-                val rank = List(skills.size){TextView(rView.context)}
-                val delete = List(skills.size){ImageView(rView.context)}
-                val dh = grid.DeleteHandler()
-
-                val sp = MutableList(6){GridLayout.LayoutParams()}
+                val entry = MutableList(skills.size){TableRow(rView.context)}
 
                 for ((i, sk) in skills.withIndex()) {
-                    for (j: Int in 0..5) {
-                        sp[j] = GridLayout.LayoutParams()
-                        grid.setParams(i + 2, j, sp[j])
-                    }
-                    name[i].text = sk.name
-                    if (sk.spec == null || sk.spec == "") {
-                        spec[i].text = "N/A"
-                    } else {
-                        spec[i].text = sk.spec
-                    }
-                    diff[i].text = sk.diff_str
-                    attr[i].text = sk.att
-                    rank[i].text = (sk.rank + App.current.getAttr(sk.att).toInt()).toString()
-
-                    if (i.rem(2) != 0) {
-                        grid.setItemInverse(name[i])
-                        grid.setItemInverse(spec[i])
-                        grid.setItemInverse(diff[i])
-                        grid.setItemInverse(attr[i])
-                        grid.setItemInverse(rank[i])
-                    } else {
-                        grid.setItem(name[i])
-                        grid.setItem(spec[i])
-                        grid.setItem(diff[i])
-                        grid.setItem(attr[i])
-                        grid.setItem(rank[i])
-                    }
-
-//                    delete[i].text = res.getText(R.string.but_del)
-                    delete[i].setImageDrawable(res.getDrawable(android.R.drawable.ic_menu_delete,null))
-//                    grid.setItemInverse(delete[i])
-//                    delete[i].setBackgroundColor(res.getColor(android.R.color.holo_red_dark,null))
-                    delete[i].setPadding(2,0,50,0)
-                    delete[i].setOnClickListener( dh )
-                    grid.buttons.put(delete[i],sk)
-                    Log.w("Skill", i.toString())
-                    Log.w("Skill", sk.name)
-                    grid.addView(name[i], sp[0])
-                    grid.addView(spec[i], sp[1])
-                    grid.addView(diff[i], sp[2])
-                    grid.addView(attr[i], sp[3])
-                    grid.addView(rank[i], sp[4])
-                    grid.addView( delete[i], sp[5])
+                    entry[i] = grid.skillEntry(sk,i)
+                    grid.addView(entry[i])
                 }
             }
 

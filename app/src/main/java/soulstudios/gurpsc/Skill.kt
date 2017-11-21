@@ -49,7 +49,13 @@ class Skill(){
     }
 
     //re-calculate overall rank of skill
-    fun changeRank(){
+    fun addRank(){
+        level++
+        rank = diff+level
+    }
+
+    fun minusRank(){
+        level--
         rank = diff+level
     }
 

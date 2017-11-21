@@ -48,7 +48,7 @@ class Weapontable(context: Context): LinearLayout(context) {
         val skills = App.current.skills
         for(sk:Skill in skills){
             if(sk.spec == spec || sk.name == spec){
-                rank = sk.rank + App.current.getAttr(sk.att).toInt()-3
+                rank = sk.rank + App.current.getAttr(sk.att).toInt()
                 break
             }
         }
