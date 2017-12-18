@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.objectbox'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "soulstudios.gurpsc"
         minSdkVersion 25
@@ -30,10 +31,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-	compile "io.objectbox:objectbox-android:$objectboxVersion"
-	compile "io.objectbox:objectbox-kotlin:$objectboxVersion"
-	kapt "io.objectbox:objectbox-processor:$objectboxVersion"
-	compile 'com.android.support:appcompat-v7:25.3.1'
+    compile "io.objectbox:objectbox-android:$objectboxVersion"
+    compile "io.objectbox:objectbox-kotlin:$objectboxVersion"
+    kapt "io.objectbox:objectbox-processor:$objectboxVersion"
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
     testCompile 'junit:junit:4.12'

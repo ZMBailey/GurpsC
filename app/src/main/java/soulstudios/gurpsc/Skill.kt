@@ -1,5 +1,6 @@
 package soulstudios.gurpsc
 
+import android.util.Log
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.relation.ToOne
@@ -44,28 +45,32 @@ class Skill(){
         //this.player.target = p
 
         rank = diff+level
-
-        cost = pointCost()
     }
 
     //re-calculate overall rank of skill
     fun addRank(){
         level++
         rank = diff+level
+        Log.w("cost",cost.toString())
+        Log.w("pc",pointCost().toString())
+        cost = cost + pointCost()
+        Log.w("New Cost",cost.toString())
     }
 
     fun minusRank(){
         level--
         rank = diff+level
+        cost = cost - pointCost()
     }
 
     //re-calculate the point cost of the skill
     fun pointCost():Int{
+        var c = 0
         when{
-            level == 1 -> cost = 1
-            level == 2 -> cost = 2
-            level>3 -> cost = (level-1)*4
+            level == 1 -> c = 1
+            level == 2 -> c = 2
+            level >= 3 -> c = (level-2)*4
         }
-        return cost
+        return c
     }
 }

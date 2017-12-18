@@ -15,6 +15,8 @@ import android.widget.TextView
  */
 class Advantagetable(context: Context): LinearLayout(context) {
     var deleteButtons:MutableMap<ImageView, Advantage> = mutableMapOf()
+    var plus:MutableMap<TextView,Int> = mutableMapOf()
+    var minus:MutableMap<TextView,Int> = mutableMapOf()
     lateinit var par: PageFragment
 
     //set a TextView color scheme to be a Title
@@ -52,6 +54,24 @@ class Advantagetable(context: Context): LinearLayout(context) {
         cost = per*lvl
 
         return cost
+    }
+
+    inner class PlusHandler:View.OnClickListener{
+        override fun onClick(v: View?) {
+            Log.w("Adv Name",App.current.advantages[plus[v]!!].name)
+            App.current.advantages[plus[v]!!].addLevel()
+            Log.w("Adv Level",App.current.advantages[plus[v]!!].levels.toString())
+            par.updateTitle()
+            par.setAdvs()
+        }
+    }
+
+    inner class MinusHandler:View.OnClickListener{
+        override fun onClick(v: View?) {
+            App.current.advantages[minus[v]!!].minusLevel()
+            par.updateTitle()
+            par.setAdvs()
+        }
     }
 
     fun getEntry(lp: LayoutParams): LinearLayout {
@@ -104,15 +124,18 @@ class Advantagetable(context: Context): LinearLayout(context) {
         return entry
     }
 
-    fun levelEntry(adv: Advantage): LinearLayout {
+    fun levelEntry(adv: Advantage,r: Int): LinearLayout {
         val strings:Array<String> = arrayOf(
                 resources.getString(R.string.a_lvls),
-                resources.getString(R.string.a_cost)
+                resources.getString(R.string.a_cost),
+                "-",
+                "+"
         )
         val cost = findCost(adv)
         val aValues:Array<String> = arrayOf(
                 "  ${adv.levels}",
-                "  $cost"
+                "  $cost",
+                adv.desc
         )
 
         val lp = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
@@ -140,15 +163,18 @@ class Advantagetable(context: Context): LinearLayout(context) {
         desc.setElegantTextHeight(true)
         desc.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
         desc.setSingleLine(false)
-        desc.text = adv.desc
+        desc.text = aValues[2]
 
-        val lvl_title = TextView(context)
-        lvl_title.text = strings[0]
-        setItem(lvl_title)
+        val lvl_titles = List(4){TextView(context)}
 
-        val cost_title = TextView(context)
-        cost_title.text = strings[1]
-        setItem(cost_title)
+        for((i,tv) in lvl_titles.withIndex()){
+            tv.text = strings[i]
+            if(i<2) {
+                setItem(tv)
+            }else{
+                setTitle(tv)
+            }
+        }
 
         val lvl_tv = TextView(context)
         val cost_tv = TextView(context)
@@ -158,12 +184,18 @@ class Advantagetable(context: Context): LinearLayout(context) {
         val cl = List(3){ LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT) }
         cl[0].weight = 0.5F
         cl[1].weight = 1F
+        lvl_titles[2].setOnClickListener(MinusHandler())
+        lvl_titles[3].setOnClickListener(PlusHandler())
+        minus.put(lvl_titles[2],r)
+        plus.put(lvl_titles[3],r)
 
         row[1].addView(desc, cl[1])
         row[1].addView(delete,50,50)
-        row[2].addView(lvl_title, cl[1])
+        row[2].addView(lvl_titles[2],50,50)
+        row[2].addView(lvl_titles[3],50,50)
+        row[2].addView(lvl_titles[0], cl[1])
         row[2].addView(lvl_tv,cl[1])
-        row[2].addView(cost_title, cl[1])
+        row[2].addView(lvl_titles[1], cl[1])
         row[2].addView(cost_tv,cl[1])
         entry.addView(row[0])
         entry.addView(row[1])
@@ -225,7 +257,7 @@ class Advantagetable(context: Context): LinearLayout(context) {
                 Log.w("Advantage", advantage.size.toString())
                 for ((i, adv) in advantage.withIndex()) {
                     if(adv.hasLevels){
-                        entries[i] = grid.levelEntry(adv)
+                        entries[i] = grid.levelEntry(adv,i)
                     }else {
                         entries[i] = grid.staticEntry(adv)
                     }

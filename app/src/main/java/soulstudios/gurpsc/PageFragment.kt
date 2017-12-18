@@ -40,7 +40,9 @@ class PageFragment : Fragment() {
 
     private var this_page = 0
     private var rView: View? = null
-    private var afterAdd: Boolean = false
+    private var skillAdded: Boolean = false
+    private var weaponAdded: Boolean = false
+    private var advAdded: Boolean = false
     var skillBox = App.boxStore.boxFor(Skill::class)
     var meleeBox = App.boxStore.boxFor(Melee::class)
     var rangedBox = App.boxStore.boxFor(Ranged::class)
@@ -77,10 +79,21 @@ class PageFragment : Fragment() {
     //onResume, if returning from the addskills screen, reload the skills table
     override fun onResume() {
         super.onResume()
-        if(afterAdd){
-            setSkills()
-            afterAdd=false
+        when{
+            skillAdded -> {
+                setSkills()
+                skillAdded = false
+            }
+            weaponAdded -> {
+                setWeapons()
+                weaponAdded = false
+            }
+            advAdded -> {
+                setAdvs()
+                advAdded = false
+            }
         }
+        updateTitle()
     }
 
     //when switching to a new page, reload field entries for the
@@ -94,6 +107,7 @@ class PageFragment : Fragment() {
             (page == R.layout.fragment_advantages) -> setAdvs()
             else -> setFragment(type)
         }
+        updateTitle()
     }
 
     //initial setup for a page, differs depending on the page
@@ -154,7 +168,7 @@ class PageFragment : Fragment() {
     inner class AddSkillHandler: View.OnClickListener{
         override fun onClick(v: View?) {
             win!!.exitTransition = Explode()
-            afterAdd=true
+            skillAdded=true
             val select = Intent(this@PageFragment.context,AddSkillActivity::class.java)
             startActivity(select)
         }
@@ -164,6 +178,7 @@ class PageFragment : Fragment() {
     inner class AddAdvHandler: View.OnClickListener{
         override fun onClick(v: View?) {
             win!!.exitTransition = Explode()
+            advAdded=true
             val select = Intent(this@PageFragment.context,AddAdvActivity::class.java)
             startActivity(select)
         }
@@ -173,7 +188,7 @@ class PageFragment : Fragment() {
     inner class AddMllHandler: View.OnClickListener{
         override fun onClick(v: View?) {
             win!!.exitTransition = Explode()
-            //afterAdd=true
+            weaponAdded=true
             val select = Intent(this@PageFragment.context,AddMeleeActivity::class.java)
             startActivity(select)
         }
@@ -183,7 +198,7 @@ class PageFragment : Fragment() {
     inner class AddRangedHandler: View.OnClickListener{
         override fun onClick(v: View?) {
             win!!.exitTransition = Explode()
-            //afterAdd=true
+            weaponAdded=true
             val select = Intent(this@PageFragment.context,AddRangedActivity::class.java)
             startActivity(select)
         }
@@ -272,6 +287,14 @@ class PageFragment : Fragment() {
         }
     }
 
+    fun updateTitle(){
+        val parent = activity
+        if(parent is CharSheetActivity) {
+            parent.setPoints()
+            parent.setChar()
+        }
+    }
+
     /*handler for the text fields
     updates other text fields that have been altered by the new input
      */
@@ -283,7 +306,10 @@ class PageFragment : Fragment() {
         override fun afterTextChanged(s: Editable?) {
             if((s.toString() != App.current.getAttrById(id)) && s.toString() != "" && page == this_page) {
                 when (sec) {
-                    "Desc" -> App.current.setDescById(s.toString(), id)
+                    "Desc" -> {
+                        App.current.setDescById(s.toString(), id)
+                        updateTitle()
+                    }
                     "Attr" -> {
                         val name = App.current.index[id]
                         Log.w("$name changed to",s.toString())
@@ -296,6 +322,7 @@ class PageFragment : Fragment() {
                                 setFragment("Attributes")
                             }
                         }
+                        updateTitle()
                     }
                     "Ref" -> {App.current.setById(id, Integer.parseInt(s.toString()), 0, 0)
                         setFragment("Reference") }

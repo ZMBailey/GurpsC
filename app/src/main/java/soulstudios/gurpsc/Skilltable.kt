@@ -59,6 +59,7 @@ class Skilltable(context:Context): TableLayout(context) {
             Log.w("Skill Name",App.current.skills[plus[v]!!].name)
             App.current.skills[plus[v]!!].addRank()
             Log.w("Skill Level",App.current.skills[plus[v]!!].level.toString())
+            par.updateTitle()
             par.setSkills()
         }
     }
@@ -66,6 +67,7 @@ class Skilltable(context:Context): TableLayout(context) {
     inner class MinusHandler:View.OnClickListener{
         override fun onClick(v: View?) {
             App.current.skills[minus[v]!!].minusRank()
+            par.updateTitle()
             par.setSkills()
         }
     }

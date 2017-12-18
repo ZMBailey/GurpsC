@@ -14,7 +14,7 @@ import io.objectbox.relation.ToMany
 class GCharacter() {
     @Id var id: Long = 0
     var points: Int = 0
-    var points_total: Int = 100
+    var points_total: Int = 0
     var skill_points: Int = 0
     var adv_points: Int = 0
     //----
@@ -315,7 +315,7 @@ class GCharacter() {
         skill_points = 0
         adv_points = 0
         for(item:Skill in skills){
-           skill_points += item.pointCost()
+           skill_points += item.cost
         }
         for(item:Advantage in advantages){
             item.findCost()
@@ -324,7 +324,8 @@ class GCharacter() {
     }
 
     fun showPoints():Int{
-        return points+skill_points+adv_points
+        recalcPoints()
+        return points_total - (points+skill_points+adv_points)
     }
 
     /*
@@ -374,7 +375,7 @@ class GCharacter() {
                 val str = attributes["Str"]!!
                 Log.w("Str: ", str.toString())
                 Log.w("New Str: ", input.toString())
-                points += (str - input) * 10
+                points += (input - str) * 10
 
                 attributes.put("Str", input)
                 set("BasicHP", attributes["BasicHP"]!!, str, 0)
@@ -391,7 +392,7 @@ class GCharacter() {
             if(input>2) {
                 val dex = attributes["Dex"]!!
 
-                points += (dex - input) * 20
+                points += (input - dex) * 20
 
                 attributes.put("Dex", input)
                 set("Speed", speed, dex, attributes["Health"]!!)
@@ -406,7 +407,7 @@ class GCharacter() {
             if(input>2) {
                 val health = attributes["Health"]!!
 
-                points += (health - input) * 10
+                points += (input - health) * 10
 
                 attributes.put("Health", input)
                 set("BasicFP", attributes["BasicFP"]!!, health, 0)
@@ -422,7 +423,7 @@ class GCharacter() {
             if(input>2) {
                 val iq = attributes["IQ"]!!
 
-                points += (iq - input) * 20
+                points += (input - iq) * 20
 
                 attributes.put("IQ", input)
                 set("Will", attributes["Will"]!!, iq, 0)
@@ -445,7 +446,7 @@ class GCharacter() {
             var will = attributes["Will"]!! - st1
             val new = input - st1
 
-            points += (will - new) * 5
+            points += (new - will) * 5
 
             will = new + iq
             attributes.put("Will", will)
@@ -473,7 +474,7 @@ class GCharacter() {
             val spd = speed - sum / 4
             val new = input - sum / 4
 
-            points += ((spd - new) * 20).toInt()
+            points += ((new - spd) * 20).toInt()
 
             speed = new + (dex + health) / 4
             set("Move",speed.toInt(), 0, 0)
@@ -484,7 +485,7 @@ class GCharacter() {
         override fun execute(input: Int, stat1: Int, stat2: Int) {
             val move = attributes["Move"]!!
 
-            points += (move - input) * 5
+            points += (input - move) * 5
 
             attributes.put("Move", input)
             set("Refs",input,0,0)
@@ -524,7 +525,7 @@ class GCharacter() {
             var hp = attributes["BasicHP"]!! - st1
             val new = input - st1
             Log.w("hp", hp.toString())
-            points += (hp - new) * 2
+            points += (new - hp) * 2
 
             hp = new + str
             Log.w("new", new.toString())
@@ -559,7 +560,7 @@ class GCharacter() {
             var fatigue = attributes["BasicFP"]!! - st1
             val new = input - st1
 
-            points += (fatigue - new) * 3
+            points += (new - fatigue) * 3
 
             fatigue = new + health
             attributes.put("BasicFP", fatigue)
@@ -588,7 +589,7 @@ class GCharacter() {
             var per = attributes["Per"]!! - st1
             val new = input - st1
 
-            points += (per - new) * 5
+            points += (new - per) * 5
 
             per = new + iq
             attributes.put("Per", per)

@@ -31,6 +31,16 @@ class Advantage(){
         this.desc = desc
     }
 
+    fun addLevel(){
+        levels++
+        findCost()
+    }
+
+    fun minusLevel(){
+        levels--
+        findCost()
+    }
+
     fun findCost(){
         if(hasLevels){
             cost = levels*levelCost
