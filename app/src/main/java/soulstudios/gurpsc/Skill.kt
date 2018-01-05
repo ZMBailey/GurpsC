@@ -34,7 +34,7 @@ class Skill(){
 
     }
 
-    constructor(p: GCharacter,n:String,a:String,s:String?,note:String,d:String,l:Int):this(){
+    constructor(n:String,a:String,s:String?,note:String,d:String,l:Int):this(){
         this.name = n
         this.att = a
         this.spec = s
@@ -42,7 +42,6 @@ class Skill(){
         this.diff = difficulty[d]!!
         this.diff_str = d
         this.level = l
-        //this.player.target = p
 
         rank = diff+level
     }

@@ -13,6 +13,7 @@ class Skilltable(context:Context): TableLayout(context) {
     var buttons:MutableMap<ImageView,Skill> = mutableMapOf()
     var plus:MutableMap<TextView,Int> = mutableMapOf()
     var minus:MutableMap<TextView,Int> = mutableMapOf()
+    var rolls:MutableMap<ImageView,Int> = mutableMapOf()
     lateinit var par:PageFragment
 
     fun setTitle(tv:TextView){
@@ -72,6 +73,12 @@ class Skilltable(context:Context): TableLayout(context) {
         }
     }
 
+    inner class RollHandler:View.OnClickListener{
+        override fun onClick(v: View?) {
+            par.roll(rolls[v]!!)
+        }
+    }
+
     fun getEntry(lp:LinearLayout.LayoutParams):TableRow{
         val entry = TableRow(context)
         entry.orientation = LinearLayout.HORIZONTAL
@@ -80,14 +87,15 @@ class Skilltable(context:Context): TableLayout(context) {
     }
 
     fun skillEntry(sk:Skill,r:Int):TableRow{
+        val rank = sk.rank + App.current.getAttr(sk.att).toInt()
         val wValues:Array<String> = arrayOf(
                 sk.name,
                 sk.spec!!,
                 sk.diff_str,
                 sk.att,
                 "-",
-                "+",
-                (sk.rank + App.current.getAttr(sk.att).toInt()).toString()
+                "+",rank.toString()
+
         )
 
         val lp = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
@@ -101,12 +109,18 @@ class Skilltable(context:Context): TableLayout(context) {
         buttons.put(delete,sk)
 
         val fields = List(7){TextView(context)}
+        val roll = ImageView(context)
+        roll.setImageDrawable(resources.getDrawable(R.drawable.die_blue_small,null))
+        roll.setOnClickListener(RollHandler())
+        rolls.put(roll,rank)
 
         val cl = List(3){TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)}
         cl[0].weight = 0.5F
         cl[1].weight = 1F
         fields[4].setOnClickListener(MinusHandler())
         fields[5].setOnClickListener(PlusHandler())
+
+        entry.addView(roll,cl[1])
 
         for((i,tv) in fields.withIndex()){
             if (wValues[i] == "") {
@@ -139,6 +153,7 @@ class Skilltable(context:Context): TableLayout(context) {
             Log.w("Skills",skills.size.toString())
             val res = page.resources
             val strings:Array<Int> = arrayOf(
+                    R.string.but_del,
                     R.string.skill_name,
                     R.string.skill_spec,
                     R.string.skill_diff,
@@ -157,7 +172,7 @@ class Skilltable(context:Context): TableLayout(context) {
             val celp = TableRow.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
             celp.weight = 1F
 
-            val title = List(9){TextView(rView.context)}
+            val title = List(10){TextView(rView.context)}
             title[0].text = res.getString(R.string.skills_title)
             grid.setTitle(title[0])
             title[0].layoutParams = lp
@@ -165,10 +180,10 @@ class Skilltable(context:Context): TableLayout(context) {
 
             val title_row = TableRow(rView.context)
 
-            for(i:Int in 1..8) {
+            for(i:Int in 1..9) {
                 title[i].text = res.getString(strings[i-1])
                 grid.setTitle(title[i])
-                if(i == 8 || i == 5 || i == 6) {
+                if(i == 9 || i == 6 || i == 7 || i == 1) {
                     title[i].setTextColor(res.getColor(android.R.color.black,null))
                     title_row.addView(title[i],50,50)
                 }else{

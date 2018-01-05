@@ -1,5 +1,6 @@
 package soulstudios.gurpsc
 
+import android.content.res.Configuration
 import android.database.CharArrayBuffer
 import android.graphics.Point
 import android.support.design.widget.FloatingActionButton
@@ -26,16 +27,13 @@ import io.objectbox.*
 
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_char_sheet.*
+import java.util.*
 
 class CharSheetActivity : AppCompatActivity() {
 
     /**
-     * The [android.support.v4.view.PagerAdapter] that will provide
-     * fragments for each of the sections. We use a
-     * [FragmentPagerAdapter] derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * [android.support.v4.app.FragmentStatePagerAdapter].
+     * The Parent activity containing the Tabs, the Die Roller, and the
+     * ViewPager which displays all the pages.
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
@@ -44,13 +42,12 @@ class CharSheetActivity : AppCompatActivity() {
      */
     private var mViewPager: ViewPager? = null
     private var pages: Array<PageFragment> = arrayOf()
+    var page = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_char_sheet)
 
-//        val toolbar = findViewById(R.id.toolbar) as Toolbar
-//        setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         var size = Point()
@@ -58,6 +55,7 @@ class CharSheetActivity : AppCompatActivity() {
         App.width = size.x
         pt_total.addTextChangedListener(PointsHandler())
 
+        // array of all pages, allows referencing of functions/variables specific to a page.
         pages = arrayOf(
                 PageFragment.newInstance(1,window),
                 PageFragment.newInstance(2,window),
@@ -73,7 +71,9 @@ class CharSheetActivity : AppCompatActivity() {
         mViewPager = findViewById(R.id.container) as ViewPager
         mViewPager!!.adapter = mSectionsPagerAdapter
         mViewPager!!.addOnPageChangeListener(PageListener())
+        mViewPager!!.offscreenPageLimit = 0
 
+        // Set up tabs
         tabs.setupWithViewPager(mViewPager)
         tabs.tabMode = TabLayout.MODE_SCROLLABLE
     }
@@ -98,17 +98,47 @@ class CharSheetActivity : AppCompatActivity() {
 
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration?) {
+        super.onConfigurationChanged(newConfig)
+        mSectionsPagerAdapter!!.notifyDataSetChanged()
+    }
+
+    //set the current character name in the header.
     fun setChar(){
         val charname = "Character: ${App.current.getDesc("name")}"
         character.text = charname
     }
 
+    //display current unspent points
     fun setPoints(){
         App.current.recalcPoints()
         val points = "Unspent: ${App.current.showPoints().toString()}"
         pt_unspent.text = points
     }
 
+    //Roll 3d6 and determine success failure based on input target.
+    fun rollDice(target: Int){
+        val d1 = genRandom(6,1)
+        val d2 = genRandom(6,1)
+        val d3 = genRandom(6,1)
+
+        val roll = d1+d2+d3
+        var success = "Fail"
+        if(roll<=target){
+            success = "Success"
+        }
+
+        val display = "Roll: $d1 + $d2 + $d3 = $roll\nTarget: $target\n$success"
+
+        roller.text = display
+    }
+
+    private fun genRandom(max: Int, min: Int): Int {
+        val r = Random()
+        return r.nextInt(max - min + 1) + min
+    }
+
+    //updates points when total is changed
     inner class PointsHandler: TextWatcher{
         override fun afterTextChanged(s: Editable?) {
             if(s != null) {
@@ -139,6 +169,10 @@ class CharSheetActivity : AppCompatActivity() {
             return 7
         }
 
+        override fun getItemPosition(`object`: Any?): Int {
+            return POSITION_NONE
+        }
+
         override fun getPageTitle(position: Int): CharSequence? {
             when (position) {
                 0 -> return "Options"
@@ -153,12 +187,17 @@ class CharSheetActivity : AppCompatActivity() {
         }
     }
 
+    //Listens for page switching, performs page updates based on which page is current
     inner class PageListener: ViewPager.OnPageChangeListener{
         override fun onPageSelected(position: Int) {
             Log.w("Position",position.toString())
+            page = position
             if(position != 0) {
                 PageFragment.page = PageFragment.fragments[position]
                 val title = mSectionsPagerAdapter!!.getPageTitle(position).toString()
+//                if(title == "Attributes"){
+//                    pages[position].setFragment(title)
+//                }
                 pages[position].updateView(title)
             }
         }

@@ -28,16 +28,10 @@ class Melee():Weapon(){
     constructor(n:String,wc:String,dm:String,rh:String,pa:String):this(){
         this.name = n
         this.w_class = wc
-        //this.tl = tl
         this.dmg = dm
-        //this.cost = ct
-//        this.weight = wg
-//        this.st = str
-
         this.reach = rh
         this.parry = pa
 
-        //this.player.target = g
     }
 
 

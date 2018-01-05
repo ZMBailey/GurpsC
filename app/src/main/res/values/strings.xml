@@ -114,5 +114,15 @@
     <string name="a_has_level">Has Levels:</string>
     <string name="a_lvls">Lvls:</string>
     <string name="a_cost_level">Cost/Lvl:</string>
+    
+    <!--roll descriptions-->
+    <string name="str_roll">Str Roll</string>
+    <string name="dex_roll">Dex Roll</string>
+    <string name="ht_roll">Health Roll</string>
+    <string name="iq_roll">IQ Roll</string>
+    <string name="will_roll">Will Roll</string>
+    <string name="per_roll">Per Roll</string>
+    <string name="custom_roll">Custom Roll</string>
+    <string name="target">Target: </string>
 
 </resources>

@@ -173,10 +173,6 @@ class GCharacter() {
         points = 0
     }
 
-    constructor(id: Long,n: String, d: String, a: String, p: Int, sp: Int, s: Float,sk:ToMany<Skill>):this(){
-
-    }
-
     /*setById allows the Set function to be called using an Id number
     * of a field instead of the name.*/
     fun setById(field: Int,input: Number,stat1: Int,stat2: Int){
@@ -258,8 +254,7 @@ class GCharacter() {
     }
 
     /*
-    addSkill() adds a new skill -------------------------------------------------------->
-    removeSkill() removes a skill
+     *--Add/Remove a Weapon,use addMelee()/addRanged() to add---------------------------------->
      */
     fun addMelee(n:String,wc:String,dm:String,rh:String,pa:String){
         val w = Melee(n,wc,dm,rh,pa)
@@ -290,9 +285,10 @@ class GCharacter() {
             ranged.remove(w)
         }
     }
-
+    //------------------------------------------------------------------<
+    //---Add/Remove Skill--------------------------------------------------->
     fun addSkill(name:String,attr:String,spec:String?,note:String,diff:String,lvl:Int){
-        val newskill = Skill(this,name,attr,spec,note,diff,lvl)
+        val newskill = Skill(name,attr,spec,note,diff,lvl)
         skills.add(newskill)
     }
 
@@ -300,7 +296,8 @@ class GCharacter() {
         //s.player.target = null
         skills.remove(s)
     }
-
+    //-------------------------------------------------------------------<
+    //---Add/Remove Advantage----------------------------------------------->
     fun addAdv(name:String,cost:Int,hl:Boolean,lc:Int,lvl:Int,d:String){
         val newadv = Advantage(name,cost,hl,lc,lvl,d)
         advantages.add(newadv)
@@ -310,7 +307,9 @@ class GCharacter() {
         //s.player.target = null
         advantages.remove(a)
     }
+    //--------------------------------------------------------------------<
 
+    //recalculates total cost of Skills and Advantages seperately
     fun recalcPoints(){
         skill_points = 0
         adv_points = 0
@@ -323,6 +322,7 @@ class GCharacter() {
         }
     }
 
+    //calculates and returns the total points spent
     fun showPoints():Int{
         recalcPoints()
         return points_total - (points+skill_points+adv_points)
@@ -469,26 +469,35 @@ class GCharacter() {
             if(stat2 == 0){
                 st2 = health
             }
+
             val sum = st1 + st2
 
-            val spd = speed - sum / 4
-            val new = input - sum / 4
+            val spd = speed - (sum / 4)
+            val new = input - (sum / 4)
 
+            Log.w("Speed Cost",((new - spd) * 20).toInt().toString())
             points += ((new - spd) * 20).toInt()
 
+            val old = speed
             speed = new + (dex + health) / 4
-            set("Move",speed.toInt(), 0, 0)
+            set("Move",attributes["Move"]!!, old.toInt(), 0)
         }
     }
 
     private inner class SetMove : Update {
         override fun execute(input: Int, stat1: Int, stat2: Int) {
-            val move = attributes["Move"]!!
+            var st1 = stat1
+            if(stat1 == 0){
+                st1 = speed.toInt()
+            }
+            var move = attributes["Move"]!! - st1
+            val new = input - st1
 
-            points += (input - move) * 5
+            points += (new - move) * 5
 
-            attributes.put("Move", input)
-            set("Refs",input,0,0)
+            move = new + speed.toInt()
+            attributes.put("Move", move)
+            set("Refs",move,0,0)
         }
 
         override fun execute(input: Float, stat1: Int, stat2: Int) {}

@@ -38,7 +38,6 @@ class AddRangedActivity : AppCompatActivity() {
             val rof = wRof.text.toString()
             val shots = wShots.text.toString()
             val rcl = wRcl.text.toString()
-            val cost = ""
 
             App.current.addRanged(name,w_class,dmg,acc,range,rof,shots,rcl)
             val added = "Weapon $name has been added"

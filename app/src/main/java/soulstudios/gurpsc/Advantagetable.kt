@@ -32,28 +32,11 @@ class Advantagetable(context: Context): LinearLayout(context) {
         tv.textAlignment = View.TEXT_ALIGNMENT_CENTER
     }
 
-    //set a TextView color scheme to be an alternate line item
-    fun setItemInverse(tv: TextView){
-        tv.setBackgroundColor(resources.getColor(android.R.color.darker_gray,null))
-        tv.setTextColor(resources.getColor(android.R.color.black,null))
-        tv.textAlignment = View.TEXT_ALIGNMENT_CENTER
-    }
-
-    //set layout parameters for line items
-    fun setParams(i:Int,c:Int,lp: LayoutParams){
-        lp.height = LayoutParams.WRAP_CONTENT
-        lp.width = LayoutParams.WRAP_CONTENT
-
-    }
-
     fun findCost(adv: Advantage):Int{
-        var cost = 0
         val per = adv.levelCost
         val lvl = adv.levels
 
-        cost = per*lvl
-
-        return cost
+        return per*lvl
     }
 
     inner class PlusHandler:View.OnClickListener{
