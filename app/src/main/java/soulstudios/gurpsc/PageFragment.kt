@@ -85,27 +85,6 @@ class PageFragment : Fragment() {
         Log.w("Run","OnDestroy")
     }
 
-//    override fun onConfigurationChanged(newConfig: Configuration?) {
-//        super.onConfigurationChanged(newConfig)
-//        when(newConfig!!.orientation) {
-//            ORIENTATION_PORTRAIT -> {
-//                fragments = verticalfragments
-//                when(this_page){
-//                    R.layout.fragment_options_horizontal -> rView = layoutInflater.inflate(R.layout.fragment_options,con,false)
-//                    R.layout.fragment_attributes_horizontal -> rView = layoutInflater.inflate(R.layout.fragment_attributes,con,false)
-//                }
-//            }
-//            ORIENTATION_LANDSCAPE -> {
-//                fragments = horizontalfragments
-//                when(this_page){
-//                    R.layout.fragment_options -> rView = layoutInflater.inflate(R.layout.fragment_options_horizontal,con,false)
-//                    R.layout.fragment_attributes -> rView = layoutInflater.inflate(R.layout.fragment_attributes_horizontal,con,false)
-//                }
-//            }
-//        }
-//        this_page = fragments[index]
-//    }
-
     //onResume, if returning from the addskills screen, reload the skills table
     override fun onResume() {
         super.onResume()
@@ -353,7 +332,6 @@ class PageFragment : Fragment() {
     }
 
     fun roll(target:Int){
-        //val target:Int = App.current.getAttr(view.tag.toString()).toInt()
         val parent = activity
         if(parent is CharSheetActivity) {
             parent.rollDice(target)
